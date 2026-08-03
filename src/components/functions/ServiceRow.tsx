@@ -18,6 +18,9 @@ export function ServiceRow({
   onUpdate,
   onRemove,
 }: ServiceRowProps) {
+  const subtotal = serviceSubtotal(service)
+  const showEquation = (service.qty || 1) > 1
+
   return (
     <div
       className={cn(
@@ -64,11 +67,6 @@ export function ServiceRow({
                 aria-label="Price"
               />
             </div>
-            <span className="w-20 text-right text-sm font-semibold tabular-nums text-slate-700">
-              {service.included === false
-                ? '—'
-                : formatINR(serviceSubtotal(service))}
-            </span>
           </>
         )}
         <button
@@ -79,6 +77,23 @@ export function ServiceRow({
           <Trash2 className="size-4" />
         </button>
       </div>
+      {showPricing && (
+        <>
+          <div className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-1.5 sm:hidden">
+            <span className="text-xs font-medium text-slate-400">
+              {showEquation
+                ? `Final price (${service.qty} × ${formatINR(service.price || 0)})`
+                : 'Final price'}
+            </span>
+            <span className="text-sm font-bold tabular-nums text-slate-800">
+              {service.included === false ? '—' : formatINR(subtotal)}
+            </span>
+          </div>
+          <span className="hidden w-20 text-right text-sm font-semibold tabular-nums text-slate-700 sm:block">
+            {service.included === false ? '—' : formatINR(subtotal)}
+          </span>
+        </>
+      )}
     </div>
   )
 }
