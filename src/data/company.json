@@ -1,0 +1,31 @@
+{
+  "name": "Mangalam Events & Weddings",
+  "tagline": "Crafting Unforgettable Celebrations Across Gujarat",
+  "address": "2nd Floor, Shreeji Arcade, 150 Feet Ring Road",
+  "city": "Rajkot, Gujarat 360005",
+  "phone": "+91 98250 12345",
+  "email": "hello@mangalamevents.in",
+  "website": "www.mangalamevents.in",
+  "gstin": "24ABCDE1234F1Z5",
+  "quotePrefix": "MEW",
+  "currency": "INR",
+  "terms": [
+    "This quotation is valid for 15 days from the date of issue.",
+    "50% advance payment is required to confirm the booking. Balance payment must be completed 7 days before the event date.",
+    "All prices are exclusive of GST. GST as applicable will be charged extra.",
+    "Any additional services or items requested after finalisation will be billed separately.",
+    "In case of cancellation, advance payment is non-refundable as per the cancellation policy shared at the time of booking.",
+    "Venue permissions, electricity and municipal approvals are the responsibility of the client.",
+    "The company is not responsible for delays caused by force majeure conditions including but not limited to weather, power failure, strikes or government regulations.",
+    "Props and décor items remain the property of the event company unless stated otherwise.",
+    "Any damage caused to venue property during the event will be billed to the client at actuals.",
+    "A final bill with actual usage will be shared within 3 working days after the event.",
+    "Both parties agree to resolve any dispute amicably under the jurisdiction of Rajkot, Gujarat courts."
+  ],
+  "bankDetails": {
+    "accountName": "Mangalam Events & Weddings",
+    "accountNumber": "50100234567890",
+    "ifsc": "HDFC0001234",
+    "bank": "HDFC Bank, Rajkot"
+  }
+}
