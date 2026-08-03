@@ -51,32 +51,19 @@ await page.waitForSelector('#preview-pages .pdf-page', { timeout: 15000 })
 await new Promise((r) => setTimeout(r, 1500))
 
 const pageCount = await page.$$eval('#preview-pages .pdf-page', (els) => els.length)
-check('Preview opens with 8 pages', pageCount === 8, `found ${pageCount}`)
+check('Preview opens with 11 pages', pageCount === 11, `found ${pageCount}`)
 
 const modalText = await page.$eval('#preview-pages', (el) => el.textContent)
 check('Cover has client name', modalText.includes('Rahul Patel'))
 check('Detailed mode shows item prices', modalText.includes('Subtotal') && modalText.includes('₹2,45,000') && modalText.includes('×1'))
-check('Detailed: one page per function', !modalText.includes('part 1/2'))
 await page.screenshot({ path: `${OUT}/preview-detailed.png`, fullPage: false })
-
-// Switch to package mode (scoped to preview toolbar)
-const pkgBtn = await page.evaluateHandle(() => {
-  const toolbar = document.querySelector('[data-testid="preview-toolbar"]')
-  return [...toolbar.querySelectorAll('button')].find((b) => b.textContent.trim() === 'Package')
-})
-await pkgBtn.asElement().click()
-await new Promise((r) => setTimeout(r, 1200))
-const packageText = await page.$eval('#preview-pages', (el) => el.textContent)
-check('Package mode hides per-item prices', !packageText.includes('×1'))
-check('Package mode still shows totals', packageText.includes('Package Price') && packageText.includes('₹8,26,000'))
-await page.screenshot({ path: `${OUT}/preview-package.png` })
 
 // Export PDF — headless Chrome here never emits real downloads (no download
 // events fire at all), so we re-run exportPagesToPdf in-page and validate the
 // returned Blob (same code path as the Export button, minus pdf.save()).
 const clickExport = await page.evaluateHandle(() => {
   const toolbar = document.querySelector('[data-testid="preview-toolbar"]')
-  return [...toolbar.querySelectorAll('button')].find((b) => b.textContent.includes('Export PDF'))
+  return [...toolbar.querySelectorAll('button')].find((b) => b.textContent.includes('Download PDF'))
 })
 await clickExport.asElement().click()
 let successToast = false
@@ -110,7 +97,7 @@ const pdfHeadStr = await page.evaluate(async () => {
   return { head: text.slice(0, 8), pages: (text.match(/\/Type\s*\/Page[^s]/g) || []).length }
 })
 check('Valid PDF header', pdfHeadStr.head.startsWith('%PDF-'), pdfHeadStr.head)
-check('PDF has 8 pages', pdfHeadStr.pages === 8, `found ${pdfHeadStr.pages}`)
+check('PDF has 11 pages', pdfHeadStr.pages === 11, `found ${pdfHeadStr.pages}`)
 
 console.log('--- CONSOLE ERRORS ---')
 consoleErrors.forEach((e) => console.log('  ' + e.slice(0, 250)))

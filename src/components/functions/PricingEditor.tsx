@@ -12,9 +12,9 @@ interface PricingEditorProps {
   onChangePackagePrice: (price: number) => void
 }
 
-const modes: { id: PricingMode; label: string; hint: string; icon: typeof ListChecks }[] = [
-  { id: 'package', label: 'Package Price', hint: 'Single price for the whole function', icon: BadgeIndianRupee },
-  { id: 'itemized', label: 'Item-wise Pricing', hint: 'Price of every service', icon: ListChecks },
+const modes: { id: PricingMode; label: string; icon: typeof ListChecks }[] = [
+  { id: 'itemized', label: 'Item-wise', icon: ListChecks },
+  { id: 'package', label: 'Package', icon: BadgeIndianRupee },
 ]
 
 export function PricingEditor({
@@ -25,8 +25,8 @@ export function PricingEditor({
   onChangePackagePrice,
 }: PricingEditorProps) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-3">
-      <div className="mb-3 flex flex-wrap items-center gap-2">
+    <div className="flex flex-wrap items-center gap-3 rounded-xl bg-slate-50 px-3 py-2.5">
+      <div className="flex items-center gap-1 rounded-lg bg-slate-200/60 p-1">
         {modes.map((m) => {
           const Icon = m.icon
           const active = mode === m.id
@@ -35,17 +35,17 @@ export function PricingEditor({
               key={m.id}
               onClick={() => onChangeMode(m.id)}
               className={cn(
-                'flex items-center gap-2 rounded-lg border px-3 py-2 text-left text-sm font-medium transition-all cursor-pointer',
+                'flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors cursor-pointer',
                 active
-                  ? 'border-violet-300 bg-white text-violet-700 shadow-sm ring-1 ring-violet-200'
-                  : 'border-slate-200 bg-white/60 text-muted-foreground hover:border-slate-300 hover:text-foreground',
+                  ? 'bg-white text-violet-700 shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground',
               )}
             >
               <Icon className="size-4" />
               {m.label}
               {active && m.id === 'itemized' && (
-                <span className="rounded-full bg-violet-100 px-1.5 py-0.5 text-[10px] font-semibold text-violet-700">
-                  {itemCount} items
+                <span className="rounded-full bg-violet-100 px-1.5 py-0.5 text-[11px] font-semibold text-violet-700">
+                  {itemCount}
                 </span>
               )}
             </button>
@@ -53,37 +53,23 @@ export function PricingEditor({
         })}
       </div>
 
-      {mode === 'package' ? (
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-lg font-semibold text-muted-foreground">
-              ₹
-            </span>
-            <Input
-              type="number"
-              min={0}
-              value={packagePrice || ''}
-              placeholder="0"
-              onChange={(e) =>
-                onChangePackagePrice(Math.max(0, Number(e.target.value) || 0))
-              }
-              className="h-11 w-48 pl-8 text-lg font-semibold"
-            />
-          </div>
-          <div className="text-xs leading-relaxed text-muted-foreground">
-            <p className="font-medium text-foreground">Package Price</p>
-            <p>
-              The PDF shows the included services and a single price. Ideal when
-              the client asks only for the final package price.
-            </p>
-          </div>
+      {mode === 'package' && (
+        <div className="relative">
+          <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-base font-semibold text-muted-foreground">
+            ₹
+          </span>
+          <Input
+            type="number"
+            inputMode="numeric"
+            min={0}
+            value={packagePrice || ''}
+            onChange={(e) =>
+              onChangePackagePrice(Math.max(0, Number(e.target.value) || 0))
+            }
+            className="h-10 w-40 pl-8 text-base font-semibold"
+            aria-label="Package price"
+          />
         </div>
-      ) : (
-        <p className="text-xs text-muted-foreground">
-          Enter a price for every service below. The PDF shows the item-wise
-          breakdown with the function subtotal. All service prices can be edited
-          inline.
-        </p>
       )}
     </div>
   )

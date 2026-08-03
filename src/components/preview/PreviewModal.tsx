@@ -1,12 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { FileDown, LoaderCircle, Printer, X } from 'lucide-react'
+import { FileDown, LoaderCircle, X } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
-import { cn } from '@/utils/cn'
 import { useQuotationContext } from '@/hooks/useQuotation'
-import type { PricingDisplayMode } from '@/types'
 import {
   buildPageModel,
   CoverPage,
@@ -20,8 +18,6 @@ export function PreviewModal() {
     quotation,
     previewOpen,
     closePreview,
-    displayMode,
-    setDisplayMode,
     exportRequested,
     clearExportRequest,
   } = useQuotationContext()
@@ -81,19 +77,6 @@ export function PreviewModal() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [previewOpen, exportRequested])
 
-  const modes: { id: PricingDisplayMode; label: string; hint: string }[] = [
-    {
-      id: 'package',
-      label: 'Package',
-      hint: 'PDF shows one price per function',
-    },
-    {
-      id: 'detailed',
-      label: 'Detailed',
-      hint: 'PDF shows every service price',
-    },
-  ]
-
   return (
     <AnimatePresence>
       {previewOpen && (
@@ -111,7 +94,7 @@ export function PreviewModal() {
             <div className="flex min-w-0 items-center gap-3">
               <button
                 onClick={closePreview}
-                className="flex size-9 cursor-pointer items-center justify-center rounded-lg text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+                className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
                 aria-label="Close preview"
               >
                 <X className="size-5" />
@@ -127,34 +110,7 @@ export function PreviewModal() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="hidden items-center gap-1 rounded-lg bg-white/10 p-1 md:flex">
-                {modes.map((m) => (
-                  <button
-                    key={m.id}
-                    onClick={() => setDisplayMode(m.id)}
-                    className={cn(
-                      'rounded-md px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer',
-                      displayMode === m.id
-                        ? 'bg-violet-600 text-white shadow'
-                        : 'text-slate-300 hover:text-white',
-                    )}
-                  >
-                    {m.label}
-                  </button>
-                ))}
-              </div>
-              <span className="hidden text-[11px] text-slate-400 lg:block">
-                {modes.find((m) => m.id === displayMode)?.hint}
-              </span>
-              <Button
-                variant="outline"
-                onClick={() => window.print()}
-                className="border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white"
-              >
-                <Printer />
-                <span className="hidden sm:inline">Print</span>
-              </Button>
+            <div className="flex shrink-0 items-center gap-2">
               <Button
                 onClick={handleExport}
                 disabled={exporting}
@@ -165,9 +121,7 @@ export function PreviewModal() {
                 ) : (
                   <FileDown />
                 )}
-                <span className="hidden sm:inline">
-                  {exporting ? 'Exporting…' : 'Export PDF'}
-                </span>
+                {exporting ? 'Exporting…' : 'Download PDF'}
               </Button>
             </div>
           </div>
@@ -196,7 +150,7 @@ export function PreviewModal() {
                         chunk={m.chunk}
                         quoteNumber={quotation.quoteNumber}
                         client={quotation.client}
-                        detailed={displayMode === 'detailed'}
+                        detailed
                       />
                     )}
                     {m.kind === 'summary' && (
