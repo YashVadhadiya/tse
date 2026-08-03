@@ -140,7 +140,6 @@ export function PreviewModal() {
                       <CoverPage
                         {...common}
                         client={quotation.client}
-                        quoteNumber={quotation.quoteNumber}
                         date={quotation.date}
                       />
                     )}
@@ -148,7 +147,6 @@ export function PreviewModal() {
                       <FunctionPage
                         {...common}
                         chunk={m.chunk}
-                        quoteNumber={quotation.quoteNumber}
                         client={quotation.client}
                         detailed
                       />
@@ -157,14 +155,10 @@ export function PreviewModal() {
                       <SummaryPage
                         {...common}
                         quotation={quotation}
-                        quoteNumber={quotation.quoteNumber}
                       />
                     )}
                     {m.kind === 'terms' && (
-                      <TermsPage
-                        {...common}
-                        quoteNumber={quotation.quoteNumber}
-                      />
+                      <TermsPage {...common} />
                     )}
                   </>
                 )

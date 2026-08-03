@@ -79,13 +79,10 @@ function Footer({ page, total }: { page: number; total: number }) {
     <div className="absolute inset-x-0 bottom-0">
       <div className="mx-8 mb-7 flex items-end justify-between gap-4 border-t border-slate-200 pt-3">
         <p className="text-[12px] leading-relaxed text-slate-400">
-          {companyInfo.name} · {companyInfo.phone} · {companyInfo.email}
+          {companyInfo.name} · {companyInfo.phone}
         </p>
         <p className="shrink-0 text-[12px] tracking-wide text-slate-400">
           Page {page} of {total}
-        </p>
-        <p className="hidden text-[12px] text-slate-400 sm:block">
-          {companyInfo.website}
         </p>
       </div>
     </div>
@@ -156,26 +153,11 @@ function Diamond() {
   )
 }
 
-function QuoteRow({
-  label,
-  value,
-  strong,
-}: {
-  label: string
-  value: string
-  strong?: boolean
-}) {
+function QuoteRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between">
       <span className="text-[14px] text-slate-400">{label}</span>
-      <span
-        className={cn(
-          'text-[15px] font-semibold tabular-nums',
-          strong && 'text-[16px]',
-        )}
-      >
-        {value}
-      </span>
+      <span className="text-[15px] font-semibold tabular-nums">{value}</span>
     </div>
   )
 }
@@ -184,13 +166,11 @@ export function CoverPage({
   page,
   total,
   client,
-  quoteNumber,
   date,
 }: {
   page: number
   total: number
   client: ClientInfo
-  quoteNumber: string
   date: string
 }) {
   return (
@@ -258,19 +238,11 @@ export function CoverPage({
         </div>
 
         <div className="mt-auto mb-2 w-full max-w-md rounded-xl border border-violet-100 bg-violet-50/50 p-5">
-          <div className="space-y-2">
-            <QuoteRow label="Quotation Number" value={quoteNumber} strong />
-            <QuoteRow label="Issue Date" value={formatDate(date) || '—'} />
-            <QuoteRow
-              label="Valid Until"
-              value={formatDate(addDays(date, 15))}
-            />
-            <QuoteRow label="GSTIN" value={companyInfo.gstin} />
-          </div>
+          <QuoteRow label="Issue Date" value={formatDate(date) || '—'} />
         </div>
 
         <p className="text-[13px] tracking-wide text-slate-400">
-          {companyInfo.phone} · {companyInfo.email} · {companyInfo.website}
+          {companyInfo.phone}
         </p>
       </div>
       <Footer page={page} total={total} />
@@ -278,26 +250,16 @@ export function CoverPage({
   )
 }
 
-function addDays(iso: string, days: number): string {
-  if (!iso) return iso
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return iso
-  d.setDate(d.getDate() + days)
-  return d.toISOString().slice(0, 10)
-}
-
 export function FunctionPage({
   chunk,
   page,
   total,
-  quoteNumber,
   client,
   detailed,
 }: {
   chunk: FunctionPageChunk
   page: number
   total: number
-  quoteNumber: string
   client: ClientInfo
   detailed: boolean
 }) {
@@ -310,7 +272,7 @@ export function FunctionPage({
   return (
     <PageFrame>
       <PageHeader page={page} total={total} />
-      <div className="flex items-center justify-between">
+      <div className="flex items-center">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-violet-50 px-3 py-1.5 text-[12px] font-bold tracking-[0.16em] text-violet-700 uppercase ring-1 ring-violet-100">
           Function {String(fnIndex + 1).padStart(2, '0')}
           {chunkCount > 1 && (
@@ -319,7 +281,6 @@ export function FunctionPage({
             </span>
           )}
         </span>
-        <span className="text-[12px] text-slate-400">Quote: {quoteNumber}</span>
       </div>
 
       <div className="mt-3 mb-6 flex items-center gap-3">
@@ -425,12 +386,10 @@ export function SummaryPage({
   page,
   total,
   quotation,
-  quoteNumber,
 }: {
   page: number
   total: number
   quotation: Quotation
-  quoteNumber: string
 }) {
   const t = computeTotals(quotation)
   const s: SummaryFields = quotation.summary
@@ -439,11 +398,10 @@ export function SummaryPage({
   return (
     <PageFrame>
       <PageHeader page={page} total={total} />
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6">
         <h2 className="font-serif text-[30px] font-bold">
           Quotation Summary
         </h2>
-        <span className="text-[12px] text-slate-400">Quote: {quoteNumber}</span>
       </div>
 
       <div className="grid grid-cols-[1.4fr_1fr] gap-6">
@@ -556,34 +514,6 @@ export function SummaryPage({
               creating your most memorable celebration.”
             </p>
           </div>
-
-          <div className="rounded-lg border border-slate-200 p-4">
-            <p className="mb-4 text-[12px] font-bold tracking-[0.14em] text-slate-400 uppercase">
-              Acceptance
-            </p>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <div className="mb-1 flex h-10 items-end justify-center">
-                  <p className="font-serif text-[16px] italic text-slate-400">
-                    For {companyInfo.name}
-                  </p>
-                </div>
-                <div className="border-t border-slate-300 pt-1 text-center text-[12px] text-slate-400">
-                  Authorised Signatory
-                </div>
-              </div>
-              <div>
-                <div className="mb-1 flex h-10 items-end justify-center">
-                  <p className="font-serif text-[16px] italic text-slate-400">
-                    {quotation.client.clientName || 'Client'}
-                  </p>
-                </div>
-                <div className="border-t border-slate-300 pt-1 text-center text-[12px] text-slate-400">
-                  Client Acceptance
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -595,20 +525,17 @@ export function SummaryPage({
 export function TermsPage({
   page,
   total,
-  quoteNumber,
 }: {
   page: number
   total: number
-  quoteNumber: string
 }) {
   return (
     <PageFrame>
       <PageHeader page={page} total={total} />
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6">
         <h2 className="font-serif text-[30px] font-bold">
           Terms &amp; Conditions
         </h2>
-        <span className="text-[12px] text-slate-400">Quote: {quoteNumber}</span>
       </div>
 
       <div className="grid grid-cols-2 gap-x-8 gap-y-3">
@@ -630,11 +557,8 @@ export function TermsPage({
           <p className="text-[14px] text-slate-600">
             {companyInfo.address}, {companyInfo.city}
           </p>
-          <p className="mt-1.5 text-[14px] text-slate-600">
-            {companyInfo.phone} · {companyInfo.email} · {companyInfo.website}
-          </p>
-          <p className="mt-1.5 text-[14px] text-slate-400">
-            GSTIN: {companyInfo.gstin}
+          <p className="text-[14px] text-slate-600">
+            {companyInfo.phone}
           </p>
         </div>
       </div>
