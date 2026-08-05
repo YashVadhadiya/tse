@@ -1,24 +1,17 @@
-export type PricingMode = 'package' | 'itemized'
-
 export interface ClientInfo {
   clientName: string
   mobile: string
-  email: string
   eventName: string
   venue: string
   city: string
   eventDate: string
-  guestCount: string
   notes: string
 }
 
 export interface ServiceItem {
   id: string
   name: string
-  description: string
-  qty: number
   price: number
-  category?: string
   included?: boolean
 }
 
@@ -27,10 +20,9 @@ export interface FunctionSection {
   type: string
   name: string
   icon: string
-  pricingMode: PricingMode
-  packagePrice: number
   services: ServiceItem[]
   notes: string
+  total: number
 }
 
 export interface SummaryFields {
@@ -49,27 +41,6 @@ export interface Quotation {
   client: ClientInfo
   functions: FunctionSection[]
   summary: SummaryFields
-}
-
-export interface FunctionTemplate {
-  type: string
-  name: string
-  icon: string
-  description: string
-  services: Omit<ServiceItem, 'id'>[]
-}
-
-export interface ServiceTemplate {
-  name: string
-  description: string
-  price: number
-  category: string
-}
-
-export interface ServiceCategory {
-  id: string
-  name: string
-  icon: string
 }
 
 export interface CompanyInfo {
@@ -91,6 +62,3 @@ export interface CompanyInfo {
     bank: string
   }
 }
-
-export type ViewMode = 'edit' | 'preview'
-export type PricingDisplayMode = 'package' | 'detailed'

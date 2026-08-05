@@ -8,6 +8,7 @@ import {
   formatDateShort,
   formatINRFull,
   functionTotal,
+  plural,
 } from '@/utils/format'
 import type {
   ClientInfo,
@@ -131,7 +132,6 @@ function MetaGrid({ client }: { client: ClientInfo }) {
     { label: 'Event', value: client.eventName || '—' },
     { label: 'Venue', value: client.venue || '—' },
     { label: 'Date', value: formatDateShort(client.eventDate) || '—' },
-    { label: 'Guests', value: client.guestCount || '—' },
   ]
   return (
     <div className="mb-7 grid grid-cols-4 gap-px overflow-hidden rounded-lg border border-slate-200 bg-slate-200">
@@ -255,19 +255,16 @@ export function FunctionPage({
   page,
   total,
   client,
-  detailed,
 }: {
   chunk: FunctionPageChunk
   page: number
   total: number
   client: ClientInfo
-  detailed: boolean
 }) {
   const { fn, fnIndex, chunkIndex, chunkCount, items } = chunk
   const Icon = getIcon(fn.icon)
-  const isPackage = fn.pricingMode === 'package'
-  const showItems = detailed && !isPackage
   const funcTotal = functionTotal(fn)
+  const hasPrice = fn.services.some((s) => (s.price || 0) > 0)
 
   return (
     <PageFrame>
@@ -299,34 +296,26 @@ export function FunctionPage({
       )}
 
       <div className="flex-1">
-        {showItems ? (
+        {hasPrice ? (
           <>
-            <div className="grid grid-cols-[1.5fr_1.4fr_0.4fr_0.7fr] border-b-2 border-slate-300 pb-2 text-[11px] font-bold tracking-[0.14em] text-slate-400 uppercase">
+            <div className="grid grid-cols-[1fr_auto] border-b-2 border-slate-300 pb-2 text-[11px] font-bold tracking-[0.14em] text-slate-400 uppercase">
               <span>Service</span>
-              <span>Description</span>
-              <span className="text-right">Qty</span>
               <span className="text-right">Amount</span>
             </div>
             <div>
               {items.map((s) => (
                 <div
                   key={s.id}
-                  className="grid grid-cols-[1.5fr_1.4fr_0.4fr_0.7fr] items-center border-b border-slate-100 py-2.5"
+                  className="grid grid-cols-[1fr_auto] items-center border-b border-slate-100 py-2.5"
                 >
                   <span className="flex items-center gap-2 text-[14px] font-medium">
                     <span className="inline-flex size-3.5 shrink-0 items-center justify-center rounded-full bg-violet-100">
                       <span className="size-1.5 rounded-full bg-violet-600" />
                     </span>
-                    {s.name}
-                  </span>
-                  <span className="pr-3 text-[12px] text-slate-400">
-                    {s.description}
-                  </span>
-                  <span className="text-right text-[13px] text-slate-500">
-                    ×{s.qty || 1}
+                    <span className="text-[14px] leading-snug">{s.name}</span>
                   </span>
                   <span className="text-right text-[14px] font-semibold tabular-nums">
-                    {formatINRFull((s.price || 0) * Math.max(1, s.qty || 1))}
+                    {formatINRFull(s.price || 0)}
                   </span>
                 </div>
               ))}
@@ -343,31 +332,28 @@ export function FunctionPage({
         ) : (
           <>
             <div className="border-b-2 border-slate-300 pb-2 text-[11px] font-bold tracking-[0.14em] text-slate-400 uppercase">
-              Services Included
+              Services
             </div>
-            <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
-              {items.map((s) => (
-                <div
-                  key={s.id}
-                  className="flex items-baseline gap-2.5 border-b border-slate-100 py-[9px]"
-                >
-                  <span className="inline-flex size-4 shrink-0 translate-y-0.5 items-center justify-center rounded-full bg-violet-600 text-[11px] font-bold text-white">
-                    ✓
-                  </span>
-                  <div className="min-w-0">
-                    <p className="truncate text-[14px] font-medium">{s.name}</p>
-                    {s.description && (
-                      <p className="truncate text-[12px] text-slate-400">
-                        {s.description}
-                      </p>
-                    )}
+            {items.length === 0 ? (
+              <p className="py-6 text-[14px] text-slate-400">No services</p>
+            ) : (
+              <div>
+                {items.map((s) => (
+                  <div
+                    key={s.id}
+                    className="flex items-baseline gap-2.5 border-b border-slate-100 py-[9px]"
+                  >
+                    <span className="inline-flex size-3.5 shrink-0 items-center justify-center rounded-full bg-violet-100">
+                      <span className="size-1.5 rounded-full bg-violet-600" />
+                    </span>
+                    <span className="text-[14px] leading-snug">{s.name}</span>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
             <div className="mt-4 flex items-center justify-end gap-8">
               <span className="text-[12px] font-semibold tracking-[0.14em] text-slate-400 uppercase">
-                {isPackage ? 'Package Price' : 'Total'}
+                Total
               </span>
               <span className="font-serif text-[24px] font-bold text-violet-700">
                 {formatINRFull(funcTotal)}
@@ -423,9 +409,7 @@ export function SummaryPage({
                   <div>
                     <p className="text-[15px] font-semibold">{fn.name}</p>
                     <p className="text-[12px] text-slate-400">
-                      {fn.pricingMode === 'package'
-                        ? 'Package price'
-                        : `${fn.services.filter((x) => x.included !== false).length} services`}
+                      {plural(fn.services.filter((x) => x.included !== false).length, 'service')}
                     </p>
                   </div>
                 </div>

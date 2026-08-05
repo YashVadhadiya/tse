@@ -94,19 +94,6 @@ export function ClientInfoForm({
               })}
             />
           </Field>
-          <Field label="Email" error={formState.errors.email?.message}>
-            <Input
-              type="email"
-              inputMode="email"
-              className="h-11 text-base"
-              {...register('email', {
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: 'Enter a valid email',
-                },
-              })}
-            />
-          </Field>
           <Field label="Event Name">
             <Input className="h-11 text-base" {...register('eventName')} />
           </Field>
@@ -122,13 +109,6 @@ export function ClientInfoForm({
           </Field>
           <Field label="City">
             <Input className="h-11 text-base" {...register('city')} />
-          </Field>
-          <Field label="Guest Count">
-            <Input
-              inputMode="numeric"
-              className="h-11 text-base"
-              {...register('guestCount')}
-            />
           </Field>
         </div>
       </CardContent>

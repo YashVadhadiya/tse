@@ -148,7 +148,6 @@ export function PreviewModal() {
                         {...common}
                         chunk={m.chunk}
                         client={quotation.client}
-                        detailed
                       />
                     )}
                     {m.kind === 'summary' && (

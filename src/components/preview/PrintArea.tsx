@@ -9,10 +9,8 @@ import type { Quotation } from '@/types'
 
 export function PrintArea({
   quotation,
-  detailed,
 }: {
   quotation: Quotation
-  detailed: boolean
 }) {
   const model = buildPageModel(quotation.functions)
   const totalPages = model.length
@@ -36,7 +34,6 @@ export function PrintArea({
                 {...common}
                 chunk={m.chunk}
                 client={quotation.client}
-                detailed={detailed}
               />
             )}
             {m.kind === 'summary' && (

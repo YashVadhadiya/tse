@@ -8,21 +8,16 @@ import {
   type ReactNode,
 } from 'react'
 
-import demoQuotation from '@/data/demoQuotation.json'
-import functionTemplates from '@/data/functions.json'
 import type {
   ClientInfo,
   FunctionSection,
-  FunctionTemplate,
-  PricingDisplayMode,
-  PricingMode,
   Quotation,
   ServiceItem,
   SummaryFields,
 } from '@/types'
 import { uid } from '@/utils/format'
 
-const STORAGE_KEY = 'event-quotation-builder-v1'
+const STORAGE_KEY = 'event-quotation-builder-v3'
 
 export function cloneServices(
   services: ServiceItem[],
@@ -37,6 +32,7 @@ function normalizeQuotation(raw: Quotation): Quotation {
     functions: raw.functions.map((fn) => ({
       ...fn,
       id: fn.id ?? uid('fn'),
+      total: fn.total ?? 0,
       services: (fn.services ?? []).map((s) => ({ ...s, id: s.id ?? uid('svc') })),
     })),
   }
@@ -46,12 +42,10 @@ function emptyClient(): ClientInfo {
   return {
     clientName: '',
     mobile: '',
-    email: '',
     eventName: '',
     venue: '',
     city: '',
     eventDate: '',
-    guestCount: '',
     notes: '',
   }
 }
@@ -65,15 +59,6 @@ function emptySummary(): SummaryFields {
     gstPercent: 18,
     advance: 0,
   }
-}
-
-export function buildDemoQuotation(): Quotation {
-  const demo = demoQuotation as unknown as Quotation
-  return normalizeQuotation({
-    ...demo,
-    client: { ...emptyClient(), ...demo.client },
-    summary: { ...emptySummary(), ...demo.summary },
-  })
 }
 
 export function buildNewQuotation(): Quotation {
@@ -90,6 +75,109 @@ export function buildNewQuotation(): Quotation {
   }
 }
 
+function sampleClient(): ClientInfo {
+  return {
+    clientName: 'Rahul & Priya',
+    mobile: '+91 98765 43210',
+    eventName: 'Wedding + Reception',
+    venue: 'Green Meadows Resort',
+    city: 'Rajkot',
+    eventDate: '2026-11-20',
+    notes: 'Include fresh flowers and warm ambience lighting.',
+  }
+}
+
+export function buildSamplePriced(): Quotation {
+  const base = buildNewQuotation()
+  base.quoteNumber = 'Q/2026/101'
+  base.date = '2026-08-06'
+  base.client = sampleClient()
+  base.functions = [
+    {
+      id: uid('fn'),
+      type: 'custom',
+      name: 'Wedding Mandap',
+      icon: 'Heart',
+      notes: 'Traditional floral mandap with full stage styling.',
+      total: 0,
+      services: [
+        { id: uid('svc'), name: 'Floral Mandap Setup', price: 45000, included: true },
+        { id: uid('svc'), name: 'Varmala / Couple Backdrop', price: 12000, included: true },
+        { id: uid('svc'), name: 'Guest Seating Arrangement', price: 8000, included: true },
+        { id: uid('svc'), name: 'Ambience Lighting', price: 15000, included: true },
+        { id: uid('svc'), name: 'Sound System with Mics', price: 10000, included: true },
+      ],
+    },
+    {
+      id: uid('fn'),
+      type: 'custom',
+      name: 'Reception',
+      icon: 'PartyPopper',
+      notes: 'Evening reception with round-table seating.',
+      total: 0,
+      services: [
+        { id: uid('svc'), name: 'Reception Stage Décor', price: 60000, included: true },
+        { id: uid('svc'), name: 'LED Wall Visuals', price: 30000, included: true },
+        { id: uid('svc'), name: 'DJ & Sound Setup', price: 25000, included: true },
+      ],
+    },
+  ]
+  base.summary = {
+    discount: 10000,
+    additionalCharges: 'GST & service tax',
+    additionalChargesAmount: 0,
+    gstEnabled: true,
+    gstPercent: 18,
+    advance: 50000,
+  }
+  return base
+}
+
+export function buildSampleTotal(): Quotation {
+  const base = buildNewQuotation()
+  base.quoteNumber = 'Q/2026/102'
+  base.date = '2026-08-06'
+  base.client = sampleClient()
+  base.functions = [
+    {
+      id: uid('fn'),
+      type: 'custom',
+      name: 'Haldi Function',
+      icon: 'Sun',
+      notes: 'Morning haldi function at the venue lawn.',
+      total: 55000,
+      services: [
+        { id: uid('svc'), name: 'Haldi Stage with Yellow Theme', price: 0, included: true },
+        { id: uid('svc'), name: 'Fresh Marigold Décor & Tubs', price: 0, included: true },
+        { id: uid('svc'), name: 'Welcome Board & Sound Setup', price: 0, included: true },
+        { id: uid('svc'), name: 'Seating & Balloon Arch', price: 0, included: true },
+      ],
+    },
+    {
+      id: uid('fn'),
+      type: 'custom',
+      name: 'Reception',
+      icon: 'PartyPopper',
+      notes: 'Grand reception with full styling.',
+      total: 125000,
+      services: [
+        { id: uid('svc'), name: 'Reception Stage & Backdrop', price: 0, included: true },
+        { id: uid('svc'), name: 'Entry Décor & Floral Setup', price: 0, included: true },
+        { id: uid('svc'), name: 'DJ, Sound & Photo Corner', price: 0, included: true },
+      ],
+    },
+  ]
+  base.summary = {
+    discount: 15000,
+    additionalCharges: '',
+    additionalChargesAmount: 0,
+    gstEnabled: true,
+    gstPercent: 18,
+    advance: 80000,
+  }
+  return base
+}
+
 function loadInitial(): Quotation {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
@@ -97,11 +185,7 @@ function loadInitial(): Quotation {
   } catch {
     /* ignore corrupted storage */
   }
-  return buildDemoQuotation()
-}
-
-export function templateById(type: string): FunctionTemplate | undefined {
-  return (functionTemplates as FunctionTemplate[]).find((t) => t.type === type)
+  return buildNewQuotation()
 }
 
 export function useQuotation() {
@@ -145,30 +229,17 @@ export function useQuotation() {
     setQuotation((q) => ({ ...q, date }))
   }, [])
 
-  const addFunction = useCallback((type?: string) => {
+  const addFunction = useCallback((name?: string, icon?: string) => {
     setQuotation((q) => {
-      const tpl = type ? templateById(type) : undefined
-      const fn: FunctionSection = tpl
-        ? {
-            id: uid('fn'),
-            type: tpl.type,
-            name: tpl.name,
-            icon: tpl.icon,
-            pricingMode: 'itemized',
-            packagePrice: 0,
-            services: cloneServices(tpl.services as ServiceItem[]),
-            notes: '',
-          }
-        : {
-            id: uid('fn'),
-            type: 'custom',
-            name: 'New Function',
-            icon: 'Star',
-            pricingMode: 'itemized',
-            packagePrice: 0,
-            services: [],
-            notes: '',
-          }
+      const fn: FunctionSection = {
+        id: uid('fn'),
+        type: 'custom',
+        name: name || 'New Function',
+        icon: icon || 'Star',
+        services: [],
+        notes: '',
+        total: 0,
+      }
       return { ...q, functions: [...q.functions, fn] }
     })
   }, [])
@@ -211,6 +282,13 @@ export function useQuotation() {
     }))
   }, [])
 
+  const setFunctionTotal = useCallback((id: string, total: number) => {
+    setQuotation((q) => ({
+      ...q,
+      functions: q.functions.map((f) => (f.id === id ? { ...f, total } : f)),
+    }))
+  }, [])
+
   const reorderFunctions = useCallback((ordered: FunctionSection[]) => {
     setQuotation((q) => ({ ...q, functions: ordered }))
   }, [])
@@ -230,30 +308,18 @@ export function useQuotation() {
     })
   }, [])
 
-  const setFunctionPricingMode = useCallback((id: string, mode: PricingMode) => {
-    setQuotation((q) => ({
-      ...q,
-      functions: q.functions.map((f) => (f.id === id ? { ...f, pricingMode: mode } : f)),
-    }))
-  }, [])
-
-  const setPackagePrice = useCallback((id: string, packagePrice: number) => {
-    setQuotation((q) => ({
-      ...q,
-      functions: q.functions.map((f) => (f.id === id ? { ...f, packagePrice } : f)),
-    }))
-  }, [])
-
   const addService = useCallback(
-    (fnId: string, service: Omit<ServiceItem, 'id'>) => {
+    (fnId: string, service: Omit<ServiceItem, 'id'>): string => {
+      const id = uid('svc')
       setQuotation((q) => ({
         ...q,
         functions: q.functions.map((f) =>
           f.id === fnId
-            ? { ...f, services: [...f.services, { ...service, id: uid('svc') }] }
+            ? { ...f, services: [...f.services, { ...service, id }] }
             : f,
         ),
       }))
+      return id
     },
     [],
   )
@@ -324,9 +390,12 @@ export function useQuotation() {
     localStorage.removeItem(STORAGE_KEY)
   }, [])
 
-  const loadDemo = useCallback(() => {
-    const demo = buildDemoQuotation()
-    setQuotation(demo)
+  const loadSamplePriced = useCallback(() => {
+    setQuotation(buildSamplePriced())
+  }, [])
+
+  const loadSampleTotal = useCallback(() => {
+    setQuotation(buildSampleTotal())
   }, [])
 
   return useMemo(
@@ -341,17 +410,17 @@ export function useQuotation() {
       removeFunction,
       renameFunction,
       setFunctionNotes,
+      setFunctionTotal,
       reorderFunctions,
       copyServicesFrom,
-      setFunctionPricingMode,
-      setPackagePrice,
       addService,
       addServicesBulk,
       updateService,
       removeService,
       reorderServices,
       resetAll,
-      loadDemo,
+      loadSamplePriced,
+      loadSampleTotal,
     }),
     [
       quotation,
@@ -364,17 +433,17 @@ export function useQuotation() {
       removeFunction,
       renameFunction,
       setFunctionNotes,
+      setFunctionTotal,
       reorderFunctions,
       copyServicesFrom,
-      setFunctionPricingMode,
-      setPackagePrice,
       addService,
       addServicesBulk,
       updateService,
       removeService,
       reorderServices,
       resetAll,
-      loadDemo,
+      loadSamplePriced,
+      loadSampleTotal,
     ],
   )
 }
@@ -382,8 +451,6 @@ export function useQuotation() {
 export type QuotationActions = ReturnType<typeof useQuotation>
 
 interface QuotationContextValue extends QuotationActions {
-  displayMode: PricingDisplayMode
-  setDisplayMode: (mode: PricingDisplayMode) => void
   previewOpen: boolean
   openPreview: () => void
   closePreview: () => void
@@ -396,16 +463,12 @@ const QuotationContext = createContext<QuotationContextValue | null>(null)
 
 export function QuotationProvider({ children }: { children: ReactNode }) {
   const q = useQuotation()
-  const [displayMode, setDisplayMode] =
-    useState<PricingDisplayMode>('detailed')
   const [previewOpen, setPreviewOpen] = useState(false)
   const [exportRequested, setExportRequested] = useState(false)
 
   const value = useMemo<QuotationContextValue>(
     () => ({
       ...q,
-      displayMode,
-      setDisplayMode,
       previewOpen,
       openPreview: () => setPreviewOpen(true),
       closePreview: () => setPreviewOpen(false),
@@ -413,7 +476,7 @@ export function QuotationProvider({ children }: { children: ReactNode }) {
       requestExport: () => setExportRequested(true),
       clearExportRequest: () => setExportRequested(false),
     }),
-    [q, displayMode, previewOpen, exportRequested],
+    [q, previewOpen, exportRequested],
   )
 
   return (

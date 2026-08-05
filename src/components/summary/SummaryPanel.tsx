@@ -57,11 +57,6 @@ export function SummaryPanel({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <SummaryRow
-          label={`Functions (${quotation.functions.length})`}
-          value={formatINRFull(totals.functionsTotal)}
-        />
-
         <div className="flex items-center justify-between gap-3">
           <Label htmlFor="discount" className="text-sm text-muted-foreground">
             Discount (₹)

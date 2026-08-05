@@ -1,8 +1,6 @@
 import type {
   FunctionSection,
-  PricingMode,
   Quotation,
-  ServiceItem,
 } from '@/types'
 
 export function formatINR(amount: number): string {
@@ -45,17 +43,10 @@ export function uid(prefix = 'id'): string {
     .slice(2, 8)}`
 }
 
-export function serviceSubtotal(item: ServiceItem): number {
-  return (item.price || 0) * Math.max(1, item.qty || 1)
-}
-
 export function functionTotal(fn: FunctionSection): number {
-  if (fn.pricingMode === 'package') return fn.packagePrice || 0
-  return fn.services.reduce((sum, s) => sum + serviceSubtotal(s), 0)
-}
-
-export function serviceCount(fn: FunctionSection): number {
-  return fn.services.length
+  const hasPrice = fn.services.some((s) => (s.price || 0) > 0)
+  if (hasPrice) return fn.services.reduce((sum, s) => sum + (s.price || 0), 0)
+  return fn.total || 0
 }
 
 export interface Totals {
@@ -84,9 +75,4 @@ export function computeTotals(q: Quotation): Totals {
 
 export function plural(n: number, word: string, pluralWord = word + 's'): string {
   return n === 1 ? `${n} ${word}` : `${n} ${pluralWord}`
-}
-
-export const pricingModeLabel: Record<PricingMode, string> = {
-  package: 'Package Price',
-  itemized: 'Item-wise Pricing',
 }

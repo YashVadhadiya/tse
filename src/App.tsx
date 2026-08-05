@@ -14,6 +14,7 @@ import {
 import { Toaster } from '@/components/ui/sonner'
 import { ClientInfoForm } from '@/components/client/ClientInfoForm'
 import { AddFunctionDialog } from '@/components/functions/AddFunctionDialog'
+import { QuickAddFunction } from '@/components/functions/QuickAddFunction'
 import { FunctionCard } from '@/components/functions/FunctionCard'
 import { SummaryPanel } from '@/components/summary/SummaryPanel'
 import { PreviewModal } from '@/components/preview/PreviewModal'
@@ -38,7 +39,7 @@ function PrintAreaHost() {
   const { quotation } = useQuotationContext()
   return (
     <div id="print-area">
-      <PrintArea quotation={quotation} detailed />
+      <PrintArea quotation={quotation} />
     </div>
   )
 }
@@ -116,8 +117,15 @@ function BuilderPage() {
               />
             </CardHeader>
             <CardContent>
+              <QuickAddFunction
+                onAdd={q.addFunction}
+                addedNames={quotation.functions.map((f) => f.name)}
+                onSamplePriced={q.loadSamplePriced}
+                onSampleTotal={q.loadSampleTotal}
+                onClearAll={q.resetAll}
+              />
               {quotation.functions.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50/50 py-10 text-center">
+                <div className="mt-4 rounded-xl border border-dashed border-slate-300 bg-slate-50/50 py-10 text-center">
                   <ListChecks className="mx-auto size-8 text-slate-300" />
                   <p className="mt-3 text-sm font-medium text-muted-foreground">
                     No functions yet
@@ -133,7 +141,7 @@ function BuilderPage() {
                   />
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="mt-4 space-y-3">
                   {quotation.functions.map((fn, i) => (
                     <FunctionCard
                       key={fn.id}

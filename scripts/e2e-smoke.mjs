@@ -34,9 +34,14 @@ await page.waitForSelector('text=Quotation Studio', { timeout: 15000 })
 
 const bodyText = await page.$eval('body', (b) => b.textContent)
 check('App header renders', bodyText.includes('Quotation Studio'))
-check('Demo client loaded', bodyText.includes('Rahul Patel'))
-check('Grand total ₹8,26,000 shown', bodyText.includes('₹8,26,000'))
-check('Balance ₹6,76,000 shown', bodyText.includes('₹6,76,000'))
+check('Starts blank (no demo client)', !bodyText.includes('Rahul Patel'))
+check('No demo totals shown', !bodyText.includes('₹8,26,000'))
+check('Empty functions state shown', bodyText.includes('No functions yet'))
+
+const inputValues = await page.$$eval('input', (els) =>
+  els.map((el) => el.value).filter((v) => v.length > 0),
+)
+check('Client fields are empty', inputValues.length === 0, inputValues.join(', '))
 
 await new Promise((r) => setTimeout(r, 800))
 const freshBody = await page.$eval('body', (b) => b.textContent)
@@ -51,12 +56,13 @@ await page.waitForSelector('#preview-pages .pdf-page', { timeout: 15000 })
 await new Promise((r) => setTimeout(r, 1500))
 
 const pageCount = await page.$$eval('#preview-pages .pdf-page', (els) => els.length)
-check('Preview opens with 11 pages', pageCount === 11, `found ${pageCount}`)
+check('Preview opens with 3 blank pages', pageCount === 3, `found ${pageCount}`)
 
 const modalText = await page.$eval('#preview-pages', (el) => el.textContent)
-check('Cover has client name', modalText.includes('Rahul Patel'))
-check('Detailed mode shows item prices', modalText.includes('Subtotal') && modalText.includes('₹2,45,000') && modalText.includes('×1'))
-await page.screenshot({ path: `${OUT}/preview-detailed.png`, fullPage: false })
+check('Blank cover has no client name', !modalText.includes('Rahul Patel'))
+check('Summary page renders', modalText.includes('Quotation Summary'))
+check('Terms page renders', modalText.includes('Terms'))
+await page.screenshot({ path: `${OUT}/preview-blank.png`, fullPage: false })
 
 // Export PDF — headless Chrome here never emits real downloads (no download
 // events fire at all), so we re-run exportPagesToPdf in-page and validate the
@@ -97,7 +103,7 @@ const pdfHeadStr = await page.evaluate(async () => {
   return { head: text.slice(0, 8), pages: (text.match(/\/Type\s*\/Page[^s]/g) || []).length }
 })
 check('Valid PDF header', pdfHeadStr.head.startsWith('%PDF-'), pdfHeadStr.head)
-check('PDF has 11 pages', pdfHeadStr.pages === 11, `found ${pdfHeadStr.pages}`)
+check('PDF has 3 pages', pdfHeadStr.pages === 3, `found ${pdfHeadStr.pages}`)
 
 console.log('--- CONSOLE ERRORS ---')
 consoleErrors.forEach((e) => console.log('  ' + e.slice(0, 250)))

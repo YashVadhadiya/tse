@@ -1,0 +1,17 @@
+[
+  { "name": "Mandap", "icon": "Heart" },
+  { "name": "Haldi", "icon": "Sun" },
+  { "name": "Mehendi", "icon": "Leaf" },
+  { "name": "Sangeet", "icon": "Music" },
+  { "name": "Reception", "icon": "PartyPopper" },
+  { "name": "Ring Ceremony", "icon": "Gem" },
+  { "name": "Baraat", "icon": "Crown" },
+  { "name": "Godh Bharai", "icon": "Baby" },
+  { "name": "Mundan", "icon": "Sparkles" },
+  { "name": "Grah Pravesh", "icon": "House" },
+  { "name": "Navratri", "icon": "Drum" },
+  { "name": "Birthday", "icon": "Cake" },
+  { "name": "Corporate", "icon": "Briefcase" },
+  { "name": "Concert", "icon": "Mic" },
+  { "name": "Holi", "icon": "Palette" }
+]
