@@ -379,7 +379,6 @@ export function SummaryPage({
 }) {
   const t = computeTotals(quotation)
   const s: SummaryFields = quotation.summary
-  const bank = companyInfo.bankDetails
 
   return (
     <PageFrame>
@@ -390,7 +389,7 @@ export function SummaryPage({
         </h2>
       </div>
 
-      <div className="grid grid-cols-[1.4fr_1fr] gap-6">
+      <div className="space-y-6">
         <div>
           <div className="mb-2 grid grid-cols-[1fr_auto] border-b-2 border-slate-300 pb-2 text-[11px] font-bold tracking-[0.14em] text-slate-400 uppercase">
             <span>Function</span>
@@ -454,51 +453,16 @@ export function SummaryPage({
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="space-y-4">
-          <div className="rounded-lg border border-slate-200 p-4">
-            <p className="mb-2.5 text-[12px] font-bold tracking-[0.14em] text-slate-400 uppercase">
-              Payment Details
-            </p>
-            <div className="space-y-1.5 text-[14px]">
-              <p>
-                <span className="text-slate-400">Account: </span>
-                <span className="font-medium">{bank.accountName}</span>
-              </p>
-              <p>
-                <span className="text-slate-400">A/C No: </span>
-                <span className="font-medium tabular-nums">
-                  {bank.accountNumber}
-                </span>
-              </p>
-              <p>
-                <span className="text-slate-400">IFSC: </span>
-                <span className="font-medium">{bank.ifsc}</span>
-              </p>
-              <p>
-                <span className="text-slate-400">Bank: </span>
-                <span className="font-medium">{bank.bank}</span>
-              </p>
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-slate-200 p-4">
-            <p className="mb-2.5 text-[12px] font-bold tracking-[0.14em] text-slate-400 uppercase">
-              Advance Payment
-            </p>
-            <p className="text-[14px] leading-relaxed text-slate-500">
-              50% advance to confirm the booking. Balance to be settled before
-              the event date.
-            </p>
-          </div>
-
-          <div className="rounded-lg bg-gradient-to-br from-violet-600 to-violet-800 p-4 text-white">
-            <p className="font-serif text-[16px] italic">
-              “Thank you for choosing {companyInfo.name}. We look forward to
-              creating your most memorable celebration.”
-            </p>
-          </div>
-        </div>
+      <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50/70 p-4">
+        <p className="mb-1.5 text-[12px] font-bold tracking-[0.14em] text-slate-400 uppercase">
+          Advance Payment
+        </p>
+        <p className="text-[14px] leading-relaxed text-slate-500">
+          50% advance to confirm the booking. Balance to be settled before the
+          event date.
+        </p>
       </div>
 
       <Footer page={page} total={total} />
