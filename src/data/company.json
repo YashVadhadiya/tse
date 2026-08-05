@@ -1,13 +1,13 @@
 {
-  "name": "Mangalam Events & Weddings",
-  "tagline": "Crafting Unforgettable Celebrations Across Gujarat",
-  "address": "2nd Floor, Shreeji Arcade, 150 Feet Ring Road",
+  "name": "The Special Events",
+  "tagline": "Event Organizer • 14+ Years Experience",
+  "address": "Gopal Chowk, Indian Park",
   "city": "Rajkot, Gujarat 360005",
-  "phone": "+91 98250 12345",
-  "email": "hello@mangalamevents.in",
-  "website": "www.mangalamevents.in",
-  "gstin": "24ABCDE1234F1Z5",
-  "quotePrefix": "MEW",
+  "phone": "+91 77789 73037",
+  "email": "",
+  "website": "",
+  "gstin": "",
+  "quotePrefix": "TSE",
   "currency": "INR",
   "terms": [
     "This quotation is valid for 15 days from the date of issue.",
@@ -23,9 +23,9 @@
     "Both parties agree to resolve any dispute amicably under the jurisdiction of Rajkot, Gujarat courts."
   ],
   "bankDetails": {
-    "accountName": "Mangalam Events & Weddings",
-    "accountNumber": "50100234567890",
-    "ifsc": "HDFC0001234",
-    "bank": "HDFC Bank, Rajkot"
+    "accountName": "The Special Events",
+    "accountNumber": "",
+    "ifsc": "",
+    "bank": ""
   }
 }
