@@ -5,10 +5,8 @@ import { cn } from '@/utils/cn'
 import {
   computeTotals,
   formatDate,
-  formatDateShort,
   formatINRFull,
   functionTotal,
-  plural,
 } from '@/utils/format'
 import type {
   ClientInfo,
@@ -127,26 +125,6 @@ function PageHeader({ page, total }: { page: number; total: number }) {
   )
 }
 
-function MetaGrid({ client }: { client: ClientInfo }) {
-  const items = [
-    { label: 'Event', value: client.eventName || '—' },
-    { label: 'Venue', value: client.venue || '—' },
-    { label: 'Date', value: formatDateShort(client.eventDate) || '—' },
-  ]
-  return (
-    <div className="mb-7 grid grid-cols-4 gap-px overflow-hidden rounded-lg border border-slate-200 bg-slate-200">
-      {items.map((it) => (
-        <div key={it.label} className="bg-slate-50 px-3 py-3">
-          <p className="text-[11px] font-semibold tracking-[0.12em] text-slate-400 uppercase">
-            {it.label}
-          </p>
-          <p className="mt-0.5 truncate text-[14px] font-medium">{it.value}</p>
-        </div>
-      ))}
-    </div>
-  )
-}
-
 function Diamond() {
   return (
     <span className="mx-3 inline-block size-2 rotate-45 bg-violet-300" />
@@ -214,7 +192,7 @@ export function CoverPage({
           )}
         </div>
 
-        <div className="mt-10 grid w-full max-w-lg grid-cols-3 gap-3">
+        <div className="mt-12 mx-auto w-full max-w-xl overflow-hidden rounded-xl border border-slate-200">
           {[
             { label: 'Venue', value: client.venue || '—' },
             {
@@ -222,17 +200,21 @@ export function CoverPage({
               value: formatDate(client.eventDate) || '—',
             },
             { label: 'City', value: client.city || '—' },
-          ].map((m) => (
+          ].map((m, i) => (
             <div
               key={m.label}
-              className="rounded-lg border border-slate-200 bg-slate-50/60 px-3 py-3"
+              className={cn(
+                'flex items-center justify-between gap-8 px-6 py-4',
+                i > 0 && 'border-t border-slate-200',
+                i % 2 === 0 ? 'bg-white/70' : 'bg-slate-50/80',
+              )}
             >
-              <p className="text-[11px] font-semibold tracking-[0.14em] text-slate-400 uppercase">
+              <span className="text-[12px] font-semibold tracking-[0.16em] text-slate-400 uppercase">
                 {m.label}
-              </p>
-              <p className="mt-0.5 truncate text-[15px] font-medium">
+              </span>
+              <span className="text-[18px] font-semibold tabular-nums">
                 {m.value}
-              </p>
+              </span>
             </div>
           ))}
         </div>
@@ -254,12 +236,10 @@ export function FunctionPage({
   chunk,
   page,
   total,
-  client,
 }: {
   chunk: FunctionPageChunk
   page: number
   total: number
-  client: ClientInfo
 }) {
   const { fn, fnIndex, chunkIndex, chunkCount, items } = chunk
   const Icon = getIcon(fn.icon)
@@ -286,8 +266,6 @@ export function FunctionPage({
           {fn.name}
         </h2>
       </div>
-
-      <MetaGrid client={client} />
 
       {fn.notes && (
         <p className="mb-6 rounded-lg border-l-2 border-violet-200 bg-slate-50 px-3 py-2.5 font-serif text-[14px] italic text-slate-500">
@@ -407,9 +385,6 @@ export function SummaryPage({
                   </span>
                   <div>
                     <p className="text-[15px] font-semibold">{fn.name}</p>
-                    <p className="text-[12px] text-slate-400">
-                      {plural(fn.services.filter((x) => x.included !== false).length, 'service')}
-                    </p>
                   </div>
                 </div>
                 <span className="text-[15px] font-semibold tabular-nums">
@@ -424,7 +399,7 @@ export function SummaryPage({
               label="Subtotal (Functions)"
               value={formatINRFull(t.functionsTotal)}
             />
-            {s.additionalCharges && (
+            {s.additionalCharges && s.additionalChargesAmount > 0 && (
               <QuoteRow
                 label={`Additional Charges (${s.additionalCharges})`}
                 value={`+ ${formatINRFull(s.additionalChargesAmount)}`}

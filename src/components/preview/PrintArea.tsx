@@ -33,7 +33,6 @@ export function PrintArea({
               <FunctionPage
                 {...common}
                 chunk={m.chunk}
-                client={quotation.client}
               />
             )}
             {m.kind === 'summary' && (

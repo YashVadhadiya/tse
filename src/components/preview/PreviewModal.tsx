@@ -147,7 +147,6 @@ export function PreviewModal() {
                       <FunctionPage
                         {...common}
                         chunk={m.chunk}
-                        client={quotation.client}
                       />
                     )}
                     {m.kind === 'summary' && (
