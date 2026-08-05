@@ -220,7 +220,7 @@ export function CoverPage({
         </div>
 
         <div className="mt-auto mb-2 w-full max-w-md rounded-xl border border-violet-100 bg-violet-50/50 p-5">
-          <QuoteRow label="Issue Date" value={formatDate(date) || '—'} />
+          <QuoteRow label="Quotation Date" value={formatDate(date) || '—'} />
         </div>
 
         <p className="text-[13px] tracking-wide text-slate-400">
