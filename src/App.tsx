@@ -52,7 +52,7 @@ function BuilderPage() {
             <div className="flex size-8 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-violet-800 shadow-sm">
               <Sparkles className="size-4 text-white" />
             </div>
-            <p className="text-sm font-bold tracking-tight">Quotation Studio</p>
+            <p className="text-sm font-bold tracking-tight">The Special Events</p>
           </div>
 
           <div className="ml-auto flex items-center gap-2">
@@ -63,10 +63,6 @@ function BuilderPage() {
               className="hidden sm:inline-flex"
             >
               Preview
-            </Button>
-            <Button size="sm" onClick={handleExport}>
-              <FileDown className="size-4" />
-              Download PDF
             </Button>
           </div>
         </div>

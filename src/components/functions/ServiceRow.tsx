@@ -30,11 +30,11 @@ export function ServiceRow({
       <Textarea
         value={service.name}
         onChange={(e) => onUpdate({ name: e.target.value })}
-        rows={2}
+        rows={8}
         placeholder="Type your note here…"
         aria-label="Service note"
         autoFocus={autoFocus}
-        className="min-h-[52px] text-sm"
+        className="min-h-[208px] text-sm"
       />
       {showPricing ? (
         <div className="flex items-center gap-2">
