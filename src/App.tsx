@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FileDown, ListChecks, Plus, RefreshCw, Sparkles } from 'lucide-react'
+import { FileDown, ListChecks, RefreshCw, Sparkles } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/dialog'
 import { Toaster } from '@/components/ui/sonner'
 import { ClientInfoForm } from '@/components/client/ClientInfoForm'
-import { AddFunctionDialog } from '@/components/functions/AddFunctionDialog'
 import { QuickAddFunction } from '@/components/functions/QuickAddFunction'
 import { FunctionCard } from '@/components/functions/FunctionCard'
 import { SummaryPanel } from '@/components/summary/SummaryPanel'
@@ -106,15 +105,6 @@ function BuilderPage() {
                 <ListChecks className="size-4 text-violet-600" />
                 Functions
               </CardTitle>
-              <AddFunctionDialog
-                onAdd={q.addFunction}
-                trigger={
-                  <Button className="h-10">
-                    <Plus className="size-4" />
-                    Add Function
-                  </Button>
-                }
-              />
             </CardHeader>
             <CardContent>
               <QuickAddFunction
@@ -128,17 +118,8 @@ function BuilderPage() {
                 <div className="mt-4 rounded-xl border border-dashed border-slate-300 bg-slate-50/50 py-10 text-center">
                   <ListChecks className="mx-auto size-8 text-slate-300" />
                   <p className="mt-3 text-sm font-medium text-muted-foreground">
-                    No functions yet
+                    No functions yet — use Quick Add above to add one
                   </p>
-                  <AddFunctionDialog
-                    onAdd={q.addFunction}
-                    trigger={
-                      <Button className="mt-4">
-                        <Plus className="size-4" />
-                        Add your first function
-                      </Button>
-                    }
-                  />
                 </div>
               ) : (
                 <div className="mt-4 space-y-3">
