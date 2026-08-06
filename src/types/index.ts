@@ -21,6 +21,7 @@ export interface FunctionSection {
   name: string
   icon: string
   services: ServiceItem[]
+  photos: string[]
   notes: string
   total: number
 }

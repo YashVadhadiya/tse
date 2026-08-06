@@ -267,6 +267,23 @@ export function FunctionPage({
         </h2>
       </div>
 
+      {fn.photos.length > 0 && (
+        <div className="mb-6 grid grid-cols-4 gap-3">
+          {fn.photos.slice(0, 4).map((src, i) => (
+            <div
+              key={i}
+              className="aspect-[4/3] overflow-hidden rounded-lg border border-slate-200 bg-slate-50"
+            >
+              <img
+                src={src}
+                alt={`${fn.name} photo ${i + 1}`}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
       {fn.notes && (
         <p className="mb-6 rounded-lg border-l-2 border-violet-200 bg-slate-50 px-3 py-2.5 font-serif text-[14px] italic text-slate-500">
           {fn.notes}

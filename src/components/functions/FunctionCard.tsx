@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { ServiceRow } from '@/components/functions/ServiceRow'
+import { FunctionPhotos } from '@/components/functions/FunctionPhotos'
 import { cn } from '@/utils/cn'
 import { formatINRFull } from '@/utils/format'
 import type { FunctionSection } from '@/types'
@@ -18,6 +19,7 @@ interface FunctionCardProps {
     | 'renameFunction'
     | 'removeFunction'
     | 'setFunctionNotes'
+    | 'setFunctionPhotos'
     | 'setFunctionTotal'
     | 'updateService'
     | 'removeService'
@@ -77,6 +79,23 @@ export function FunctionCard({ fn, index, actions }: FunctionCardProps) {
 
       {open && (
         <div className="space-y-4 p-4">
+          <div>
+            <FunctionPhotos
+              photos={fn.photos}
+              onAdd={(dataUrls) =>
+                actions.setFunctionPhotos(fn.id, [...fn.photos, ...dataUrls])
+              }
+              onRemove={(index) =>
+                actions.setFunctionPhotos(
+                  fn.id,
+                  fn.photos.filter((_, i) => i !== index),
+                )
+              }
+            />
+          </div>
+
+          <Separator />
+
           <div>
             <p className="mb-2 text-sm font-semibold text-slate-700">
               Services

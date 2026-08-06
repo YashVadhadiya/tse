@@ -15,7 +15,7 @@ import type {
   ServiceItem,
   SummaryFields,
 } from '@/types'
-import { uid } from '@/utils/format'
+import { MAX_FUNCTION_PHOTOS, uid } from '@/utils/format'
 
 const STORAGE_KEY = 'event-quotation-builder-v3'
 
@@ -33,6 +33,7 @@ function normalizeQuotation(raw: Quotation): Quotation {
       ...fn,
       id: fn.id ?? uid('fn'),
       total: fn.total ?? 0,
+      photos: fn.photos ?? [],
       services: (fn.services ?? []).map((s) => ({ ...s, id: s.id ?? uid('svc') })),
     })),
   }
@@ -99,6 +100,7 @@ export function buildSamplePriced(): Quotation {
       name: 'Wedding Mandap',
       icon: 'Heart',
       notes: 'Traditional floral mandap with full stage styling.',
+      photos: [],
       total: 0,
       services: [
         { id: uid('svc'), name: 'Floral Mandap Setup', price: 45000, included: true },
@@ -114,6 +116,7 @@ export function buildSamplePriced(): Quotation {
       name: 'Reception',
       icon: 'PartyPopper',
       notes: 'Evening reception with round-table seating.',
+      photos: [],
       total: 0,
       services: [
         { id: uid('svc'), name: 'Reception Stage Décor', price: 60000, included: true },
@@ -145,6 +148,7 @@ export function buildSampleTotal(): Quotation {
       name: 'Haldi Function',
       icon: 'Sun',
       notes: 'Morning haldi function at the venue lawn.',
+      photos: [],
       total: 55000,
       services: [
         { id: uid('svc'), name: 'Haldi Stage with Yellow Theme', price: 0, included: true },
@@ -159,6 +163,7 @@ export function buildSampleTotal(): Quotation {
       name: 'Reception',
       icon: 'PartyPopper',
       notes: 'Grand reception with full styling.',
+      photos: [],
       total: 125000,
       services: [
         { id: uid('svc'), name: 'Reception Stage & Backdrop', price: 0, included: true },
@@ -237,6 +242,7 @@ export function useQuotation() {
         name: name || 'New Function',
         icon: icon || 'Star',
         services: [],
+        photos: [],
         notes: '',
         total: 0,
       }
@@ -253,6 +259,7 @@ export function useQuotation() {
         ...src,
         id: uid('fn'),
         name: `${src.name} (Copy)`,
+        photos: [...(src.photos ?? [])],
         services: cloneServices(src.services),
       }
       const functions = [...q.functions]
@@ -279,6 +286,17 @@ export function useQuotation() {
     setQuotation((q) => ({
       ...q,
       functions: q.functions.map((f) => (f.id === id ? { ...f, notes } : f)),
+    }))
+  }, [])
+
+  const setFunctionPhotos = useCallback((id: string, photos: string[]) => {
+    setQuotation((q) => ({
+      ...q,
+      functions: q.functions.map((f) =>
+        f.id === id
+          ? { ...f, photos: photos.slice(0, MAX_FUNCTION_PHOTOS) }
+          : f,
+      ),
     }))
   }, [])
 
@@ -410,6 +428,7 @@ export function useQuotation() {
       removeFunction,
       renameFunction,
       setFunctionNotes,
+      setFunctionPhotos,
       setFunctionTotal,
       reorderFunctions,
       copyServicesFrom,
@@ -433,6 +452,7 @@ export function useQuotation() {
       removeFunction,
       renameFunction,
       setFunctionNotes,
+      setFunctionPhotos,
       setFunctionTotal,
       reorderFunctions,
       copyServicesFrom,

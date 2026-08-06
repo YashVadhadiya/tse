@@ -3,6 +3,8 @@ import type {
   Quotation,
 } from '@/types'
 
+export const MAX_FUNCTION_PHOTOS = 4
+
 export function formatINR(amount: number): string {
   if (!Number.isFinite(amount) || amount <= 0) return '₹0'
   return '₹' + Math.round(amount).toLocaleString('en-IN')
